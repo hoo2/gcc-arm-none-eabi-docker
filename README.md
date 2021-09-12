@@ -1,48 +1,55 @@
-# A Docker image for providing a unified computing system for coursework
+# A Docker image for providing gnu-arm cross compilers as containers
 
-## Installation of the CSAL Docker image
+This image provides bare metal (arm-none-eabi-gxx) compiler collection as a container. The binaries are taken directly from [here](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads) without any modifications.
 
-Note: This README assumes that there is already Docker installed on the host machine, either Windows, MacOS or Linux. For more info on how to obtain Docker, please visit:
+The repo of the project can be found [here](https://github.com/hoo2/gcc-arm-none-eabi-docker).
 
-https://www.docker.com/products/docker-desktop
+## Supported tags
 
-Start by downloading the content of this repo, either through `git clone https://github.com/AUTh-csal/Docker.git` or by zip download here:
- 
-https://github.com/AUTh-csal/Docker/archive/main.zip 
+Bellow is the list with the supported tags as links to the git release
 
-Afterwards, by opening a terminal or Command Prompt, according to your host OS, navigate to the folder where the extracted data is (default extracted folder is `Docker`). There you can see the following directory structure (timestamps may vary!):
+  * [`7.2.1`, `7.2`, `7`, `7-2017-q4-major`](https://github.com/hoo2/gcc-arm-none-eabi-docker/blob/master/Dockerfile)
 
-```
-2020-09-29  08:57    <DIR>          .
-2020-09-29  08:57    <DIR>          ..
-2020-10-07  15:12             3 703 Dockerfile
-2020-09-29  08:57                47 hpc-build-image
-2020-09-29  08:57                85 hpc-create-container
-2020-09-29  08:57                89 hpc-start-container
-2020-09-29  08:57                78 hpc-uninstall
-2020-09-29  08:57               786 Welcome
-2020-09-29  08:57    <DIR>          Windows
-```
-For Windows users, navigate to the `Windows` directory and then run `hpc-build-image.bat`, `hpc-create-container.bat` and `hpc-start-container.bat`. The screenshots below show the expected behavior respectively (folder names may vary, I have used `c:\git\Docker2` as my base folder).
+## What is GCC?
 
-![hpc-create-container](https://user-images.githubusercontent.com/16119641/95837999-8cba7f80-0d41-11eb-9af9-5e94f56f3ceb.png)
+The GNU Compiler Collection (GCC) is a compiler system produced by the GNU Project that supports various programming languages. GCC is a key component of the GNU toolchain. The Free Software Foundation (FSF) distributes GCC under the GNU General Public License (GNU GPL). GCC has played an important role in the growth of free software, as both a tool and an example.
 
-![hpc-start-container](https://user-images.githubusercontent.com/16119641/95838179-c25f6880-0d41-11eb-82e7-40ef30f7ccb5.png)
+see: https://en.wikipedia.org/wiki/GNU_Compiler_Collection
 
-For Linux and MacOS users, remain in this folder, run `hpc-build-image`, `hpc-create-container` and `hpc-start-container`.
+## What is arm-none-eabi?
 
-## Pulling & building hello world examples for the course 050 - Parallel & Distributed Systems
-
-After succesfully having built, created and ran the container, you should be able to see the following screen, aka `welcome screen`.
-
-![2020-10-13_10h54_58](https://user-images.githubusercontent.com/16119641/95838920-a8725580-0d42-11eb-9162-ca366f81d73b.png)
-
-Then you can clone our `pds-codebase` repo by envoking the command `git clone https://github.com/AUTh-csal/pds-codebase.git` inside the container, as shown in the screenshow below.
-
-![2020-10-13_11h08_27](https://user-images.githubusercontent.com/16119641/95840645-b4f7ad80-0d44-11eb-9f05-dfa6abcc67a4.png)
-
-Then you can `cd` into the new folder by `cd pds-codebase` and do a `make all` and `make test` and you should be able to build all the hello world examples and run their respective tests as show below.
-
-![2020-10-13_11h12_08](https://user-images.githubusercontent.com/16119641/95840842-f5efc200-0d44-11eb-89a6-63929eb11d1d.png)
+The GNU Arm Embedded Toolchain is a ready-to-use, open-source suite of tools for C, C++ and assembly programming. The GNU Arm Embedded Toolchain targets the 32-bit Arm Cortex-M, and Arm Cortex-R processor families. The GNU Arm Embedded Toolchain includes the GNU Compiler (GCC) and is available free of charge directly from Arm for embedded software development on Windows, Linux, and Mac OS X operating systems.
 
 
+## How to use this image
+
+### 1) Start a GCC instance running your app
+
+The most straightforward way to use this image is to use a gcc container as both the build and runtime environment. In your Dockerfile, writing something along the lines of the following will compile and run your project:
+
+    FROM gcc-arm-none-eabi:latest
+    COPY . /usr/src/myapp
+    WORKDIR /usr/src/myapp
+    RUN gcc -o myapp main.c
+    CMD ["./myapp"]
+
+Then, build and run the Docker image:
+
+    $ docker build -t appImage .
+    $ docker run -it --rm --name my-running-app appImage
+
+### 2) Compile your app inside the Docker container
+
+There may be occasions where it is not appropriate to run your app inside a container. To compile, but not run your app inside the Docker instance, you can write something like:
+
+    $ docker run --rm -v "$PWD":/usr/src/myapp -w /usr/src/myapp gcc-arm-none-eabi:7.2 gcc -o myapp myapp.c
+
+This will add your current directory, as a volume, to the container, set the working directory to the volume, and run the command gcc -o myapp myapp.c. This tells gcc to compile the code in myapp.c and output the executable to myapp.
+
+### 3) Alternatively, if you have a Makefile, you can instead run the make command inside your container
+
+    $ docker run --rm -v "$PWD":/usr/src/myapp -w /usr/src/myapp gcc-arm-none-eabi make
+
+## TODO
+
+  1. Add support for other platforms besides linux_x64
