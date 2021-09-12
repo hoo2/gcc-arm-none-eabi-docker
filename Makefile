@@ -10,8 +10,8 @@
 DOCKER     	    := docker
 TARGET     	    := hoo2/gcc-arm-none-eabi
 
-WEB_VERSION	    := 7-2017-q4-major
-VERSION_MAJ     := 7
+WEB_VERSION	    := 8-2018-q4-major
+VERSION_MAJ     := 8
 VERSION_MIN     := 2
 VERSION_PATCH   := 1
 
