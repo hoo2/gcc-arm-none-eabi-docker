@@ -8,7 +8,9 @@ The repo of the project can be found [here](https://github.com/hoo2/gcc-arm-none
 
 Bellow is the list with the supported tags as links to the git release
 
-  * [`7.2.1`, `7.2`, `7`, `7-2017-q4-major`](https://github.com/hoo2/gcc-arm-none-eabi-docker/blob/master/Dockerfile)
+  * [`9.2.1`, `9.2`, `9`, `9-2019-q4-major`](https://github.com/hoo2/gcc-arm-none-eabi-docker/blob/896c1e8363f03a9a0eaee1c4127360bd0e093479/Dockerfile)
+  * [`8.2.1`, `8.2`, `8`, `8-2018-q4-major`](https://github.com/hoo2/gcc-arm-none-eabi-docker/blob/33859017c21f3f0f0e86857810ed3fee1b8ddcb3/Dockerfile)
+  * [`7.2.1`, `7.2`, `7`, `7-2017-q4-major`](https://github.com/hoo2/gcc-arm-none-eabi-docker/blob/972d2deac4173756493056a7bd997d3bad7f94d0/Dockerfile)
 
 ## What is GCC?
 
