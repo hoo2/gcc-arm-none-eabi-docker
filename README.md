@@ -6,8 +6,9 @@ The repo of the project can be found [here](https://github.com/hoo2/gcc-arm-none
 
 ## Supported tags
 
-Bellow is the list with the supported tags as links to the git release
+Bellow is the list with the supported tags as links to the Dockerfile of the version.
 
+  * [`10.2.1`, `10.2`, `10`, `10-2020-q4-major`](https://github.com/hoo2/gcc-arm-none-eabi-docker/blob/master/Dockerfile)
   * [`9.2.1`, `9.2`, `9`, `9-2019-q4-major`](https://github.com/hoo2/gcc-arm-none-eabi-docker/blob/896c1e8363f03a9a0eaee1c4127360bd0e093479/Dockerfile)
   * [`8.2.1`, `8.2`, `8`, `8-2018-q4-major`](https://github.com/hoo2/gcc-arm-none-eabi-docker/blob/33859017c21f3f0f0e86857810ed3fee1b8ddcb3/Dockerfile)
   * [`7.2.1`, `7.2`, `7`, `7-2017-q4-major`](https://github.com/hoo2/gcc-arm-none-eabi-docker/blob/972d2deac4173756493056a7bd997d3bad7f94d0/Dockerfile)
@@ -29,7 +30,7 @@ The GNU Arm Embedded Toolchain is a ready-to-use, open-source suite of tools for
 
 The most straightforward way to use this image is to use a gcc container as both the build and runtime environment. In your Dockerfile, writing something along the lines of the following will compile and run your project:
 
-    FROM gcc-arm-none-eabi:latest
+    FROM hoo2/gcc-arm-none-eabi:latest
     COPY . /usr/src/myapp
     WORKDIR /usr/src/myapp
     RUN gcc -o myapp main.c
@@ -40,17 +41,19 @@ Then, build and run the Docker image:
     $ docker build -t appImage .
     $ docker run -it --rm --name my-running-app appImage
 
-### 2) Compile your app inside the Docker container
+### 2) Compile your app using the compiler from inside the container
 
 There may be occasions where it is not appropriate to run your app inside a container. To compile, but not run your app inside the Docker instance, you can write something like:
 
-    $ docker run --rm -v "$PWD":/usr/src/myapp -w /usr/src/myapp gcc-arm-none-eabi:7.2 gcc -o myapp myapp.c
+    $ docker run --rm -v "$PWD":/usr/src/myapp -w /usr/src/myapp hoo2/gcc-arm-none-eabi:7.2 arm-none-eabi-gcc -o myapp myapp.c
 
-This will add your current directory, as a volume, to the container, set the working directory to the volume, and run the command gcc -o myapp myapp.c. This tells gcc to compile the code in myapp.c and output the executable to myapp.
+This will add your current directory, as a volume, to the container, set the working directory to the volume, and run the command `arm-none-eabi-gcc -o myapp myapp.c`. This tells gcc to compile the code in myapp.c and output the executable to myapp.
 
-### 3) Alternatively, if you have a Makefile, you can instead run the make command inside your container
+### 3) Alternatively, Running make  using the make from inside the container
 
-    $ docker run --rm -v "$PWD":/usr/src/myapp -w /usr/src/myapp gcc-arm-none-eabi make
+if you have a Makefile, you can instead run the make command inside your container
+
+    $ docker run --rm -v "$PWD":/usr/src/myapp -w /usr/src/myapp hoo2/gcc-arm-none-eabi make
 
 ## TODO
 
