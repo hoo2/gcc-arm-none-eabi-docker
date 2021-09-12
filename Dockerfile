@@ -9,6 +9,8 @@
 #
 # versions: 
 # ---------
+#  release: 9-2019-q4-major
+#    alias: 9.2.1, 9.2, 9
 #  release: 8-2018-q4-major
 #    alias: 8.2.1, 8.2, 8
 #  release: 7-2017-q4-major
@@ -18,7 +20,7 @@ FROM ubuntu:18.04
 
 ARG VERSION
 ENV GCC_ARM_PATH        /usr/local
-ENV GCC_VERSION         8.2.1
+ENV GCC_VERSION         9.2.1
 
 RUN apt-get update                           && \
     apt-get upgrade -y                       && \
@@ -40,6 +42,9 @@ https://developer.arm.com/-/media/Files/downloads/gnu-rm/7-2017q4/gcc-arm-none-e
 ENV LINK_8_2018_q4_major \
 https://developer.arm.com/-/media/Files/downloads/gnu-rm/8-2018q4/gcc-arm-none-eabi-8-2018-q4-major-linux.tar.bz2?revision=ab7c81a3-cba3-43be-af9d-e922098961dd?product=GNU%20Arm%20Embedded%20Toolchain,64-bit,,Linux,8-2018-q4-major
 
+ENV LINK_9_2019_q4_major \
+https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2019q4/gcc-arm-none-eabi-9-2019-q4-major-x86_64-linux.tar.bz2?revision=108bd959-44bd-4619-9c19-26187abf5225&hash=8B0FA405733ED93B97BAD0D2C3D3F62A
+
 # TODO:
 # Add a case for every release
 RUN echo "Install version: ${VERSION}" &&   \
@@ -48,6 +53,8 @@ RUN echo "Install version: ${VERSION}" &&   \
         wget -c ${LINK_7_2017_q4_major} -O -| tar -xj -C ${GCC_ARM_PATH}  ;;    \
     "8-2018-q4-major")                      \
         wget -c ${LINK_8_2018_q4_major} -O -| tar -xj -C ${GCC_ARM_PATH}  ;;    \
+    "9-2019-q4-major")                      \
+        wget -c ${LINK_9_2019_q4_major} -O -| tar -xj -C ${GCC_ARM_PATH}  ;;    \
     *)                                      \
         false || echo "Non supported version passed!"  ;;                       \
     esac
